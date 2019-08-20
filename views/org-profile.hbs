@@ -1,0 +1,110 @@
+<html>
+    <head>
+        <script src="jquery-3.4.1.js"></script>
+        
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        
+        <link rel="stylesheet" type="text/css" href="/css/main-pages.css">
+        
+        <script>
+            let adminMenu, userMenu;
+            
+            $(document).ready(
+                function(){
+                    let username = $("#username").attr("value")
+
+                    if(username == "webAdmin"){
+                        $("#profile-access").hide();
+                        $("#home-user").hide();
+                        $("#org-box").hide();
+                        $("#org-table").show()
+                        $("#home-admin").show();
+                        $(".user-icon").show();
+                    }
+                    else{
+                        $("#org-table").hide();
+                        $("#org-box").show();
+                        $("#home-user").show();
+                        $("#home-admin").hide();
+                        $(".user-icon").show();
+                    }
+                }
+            )
+        </script>
+        
+    </head>
+    
+    <body>
+        <div class="main-menu">
+            <div id="home-user">
+                <a href="../home">Home</a>
+                <div id="student-org-menu">
+                    <button id="student-org-menu-buttton"> Student Clubs
+                    </button>
+                    <div id="student-org-options">
+                        <a href="../org/org-list">All Student Clubs</a>
+                        <a href="../org/my-org-list">My Student Clubs</a>
+                    </div>
+                </div>
+                <a href="#">About</a>
+            </div>
+            
+            <div id="home-admin">
+                <div id="home-user">
+                    <a href="home">Home</a>
+                    <div id="student-org-menu">
+                        <button id="student-org-menu-buttton"> Student Clubs
+                        </button>
+                        <div id="student-org-options">
+                            <a href="../org/org-list">All Student Clubs</a>
+                            <a href="../org/my-org-list">Add New Student Clubs</a>
+                        </div>
+                    </div>
+                    <a href="#">About</a>
+                </div>
+            </div>
+            
+            <div class="user-icon">
+                <button name="username" value="{{username}}" id="user-options-button">
+                    <img src="/photos/icons8-male-user-50.png">{{username}}
+                </button>
+                <div id="user-options">
+                    <a href="" onclick="
+                    $('#profile-hidden').submit(); return false;">Profile</a>
+                    <a href="../org/requests">Club Requests</a>
+                    <a href="../user/logout">Log Out</a>
+                </div>
+
+                <form id="profile-hidden" action="user/profile" method="post">
+                    <input type="hidden"
+                    value="{{username}}" id="username" name="username">
+                    <input type="hidden" id="profileid" name="id">
+                </form>
+            </div>
+        </div>
+        
+        <p id="message">Applied Message</p>
+        
+        <div class="org-profile"></div>
+        <h1>{{org.orgName}}</h1>
+        
+        <div id="org-details">
+            <h5>Description</h5>
+            <p>{{org.description}}</p>
+            <div id="positions-avail">
+                List of Currently Applicable Positions
+                <ol id="List of Currently Applicable Positions:">
+                    {{#each org.openPositions}}
+                        <li>{{this}}</li>
+                    {{/each}}
+                </ol>
+            </div>
+        </div>
+        
+        <form id="apply-membership" action="org/apply-membership" method="post">
+            <input type="hidden"
+            value="{{username}}" id="username" name="username">
+            <input type="submit" value="Apply for Membership" action="apply-membership" method="post">
+        </form>
+    </body>
+</html>

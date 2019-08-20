@@ -1,0 +1,58 @@
+<html>
+    <header>
+        <script src="jquery-3.4.1.js"></script>
+        
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        
+        <link rel="stylesheet" type="text/css" href="/css/main-pages.css">
+        
+        <script>
+            let adminMenu, userMenu;
+            
+            $(document).ready(
+                function(){
+                    let username = $("#username").attr("value")
+
+                    if(username == "webAdmin"){
+                        $("#profile-access").hide();
+                        $("#home-user").hide();
+                        $("#org-box").hide();
+                        $("#org-table").show()
+                        $("#home-admin").show();
+                        $(".user-icon").show();
+                    }
+                    else{
+                        $("#org-table").hide();
+                        $("#org-box").show();
+                        $("#home-user").show();
+                        $("#home-admin").hide();
+                        $(".user-icon").show();
+                    }
+                }
+            )
+        </script>
+        
+    </header>
+
+    <body>
+        <div class="junior-officer-app-form">
+            <div id="dept-choice">
+                <h1>{{org.orgName}} Application</h1>
+                <h2>{{username}}, choose a department</h2>
+                    <form id="department-choice" action="submit-application" method="post">
+                        {{org.exclusivePositions}} <input type="radio" name="dept" value="{{org.exclusivePositions}}" id="{{org.exclusivePositions}}"> <br>
+                        
+                        <h1>General Questions</h1>
+                        Why do you want to be a junior officer? <textarea cols="50" rows="5"></textarea><br>
+                        Have you participated in any extracurricular activities? If so, please list them below. If not, just list your hobbies and/or skills. <textarea cols="50" rows="5"></textarea><br>
+                        What new ideas do you want to contribute to this group? <textarea cols="50" rows="5"></textarea><br>
+                        <input type="hidden" name="username" value="{{username}}">
+                        <input type="submit" value="Finish Applying">
+                    </form>
+            </div>
+        </div>
+    </body>
+    
+    <script>
+    </script>
+</html>

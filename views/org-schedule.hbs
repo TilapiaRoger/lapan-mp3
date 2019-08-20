@@ -1,0 +1,106 @@
+<html>
+    <header>
+        <script src="jquery-3.4.1.js"></script>
+        
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        
+        <link rel="stylesheet" type="text/css" href="/css/main-pages.css">
+        
+        <script>
+            let adminMenu, userMenu;
+            
+            $(document).ready(
+                function(){
+                    let username = $("#username").attr("value")
+
+                    if(username == "webAdmin"){
+                        $("#profile-access").hide();
+                        $("#home-user").hide();
+                        $("#org-box").hide();
+                        $("#org-table").show()
+                        $("#home-admin").show();
+                        $(".user-icon").show();
+                    }
+                    else{
+                        $("#org-table").hide();
+                        $("#org-box").show();
+                        $("#home-user").show();
+                        $("#home-admin").hide();
+                        $(".user-icon").show();
+                    }
+                }
+            )
+        </script>
+        
+        
+    </header>
+
+    <body>
+        <div id="schedule-selector">
+            <table>
+                <thead>
+                    <th>Time</th>
+                    <th>M</th>
+                    <th>T</th>
+                    <th>W</th>
+                    <th>H</th>
+                    <th>F</th>
+                    <th>S</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1100-1130</td>
+                    </tr>
+                    <tr>
+                        <td>1130-1200</td>
+                    </tr>
+                    <tr>
+                        <td>1200-1230</td>
+                    </tr>
+                    <tr>
+                        <td>1230-1300</td>
+                    </tr>
+                    <tr>
+                        <td>1300-1330</td>
+                    </tr>
+                    <tr>
+                        <td>1330-1430</td>
+                    </tr>
+                    <tr>
+                        <td>1400-1430</td>
+                    </tr>
+                    <tr>
+                        <td>1430-1500</td>
+                    </tr>
+                    <tr>
+                        <td>1500-1530</td>
+                    </tr>
+                    <tr>
+                        <td>1530-1600</td>
+                    </tr>
+                    <tr>
+                        <td>1600-1630</td>
+                    </tr>
+                    <tr>
+                        <td>1630-1700</td>
+                    </tr>
+                    <tr>
+                        <td>1700-1730</td>
+                    </tr>
+                    <tr>
+                        <td>1800-1830</td>
+                    </tr>
+                    <tr>
+                        <td>1830-1900</td>
+                    </tr>
+                    <tr>
+                        <td>1900-1930</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <form>
+            <input type="button" value="Finish Applying" action="register-jo" method="post">
+        </form>
+    </body>
+</html>

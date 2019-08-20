@@ -1,0 +1,126 @@
+<html>
+    <head>
+        <script src="jquery-3.4.1.js"></script>
+        
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        
+        <link rel="stylesheet" type="text/css" href="/css/main-pages.css">
+        
+        <script>
+            let adminMenu, userMenu;
+            
+            $(document).ready(
+                function(){
+                    let username = $("#username").attr("value")
+
+                    if(username == "webAdmin"){
+                        $("#profile-access").hide();
+                        $("#home-user").hide();
+                        $("#org-box").hide();
+                        $("#org-table").show()
+                        $("#home-admin").show();
+                        $(".user-icon").show();
+                    }
+                    else{
+                        $("#org-table").hide();
+                        $("#org-box").show();
+                        $("#home-user").show();
+                        $("#home-admin").hide();
+                        $(".user-icon").show();
+                    }
+                }
+            )
+        </script>
+    </head>
+    
+    <body>
+       <div class="main-menu">
+            <div id="home-user">
+                <a href="../home">Home</a>
+                <div id="student-org-menu">
+                    <button id="student-org-menu-buttton"> Student Clubs
+                    </button>
+                    <div id="student-org-options">
+                        <a href="../org/org-list">All Student Clubs</a>
+                        <a href="../org/my-org-list">My Student Clubs</a>
+                    </div>
+                </div>
+                <a href="#">About</a>
+            </div>
+            
+            <div id="home-admin">
+                <div id="home-user">
+                    <a href="home">Home</a>
+                    <div id="student-org-menu">
+                        <button id="student-org-menu-buttton"> Student Clubs
+                        </button>
+                        <div id="student-org-options">
+                            <a href="../org/org-list">All Student Clubs</a>
+                            <a href="../org/my-org-list">Add New Student Clubs</a>
+                        </div>
+                    </div>
+                    <a href="#">About</a>
+                </div>
+            </div>
+            
+            <div class="user-icon">
+                <button name="username" value="{{username}}" id="user-options-button">
+                    <img src="/photos/icons8-male-user-50.png">{{username}}
+                </button>
+                <div id="user-options">
+                    <a href="" onclick="
+                    $('#profile-hidden').submit(); return false;">Profile</a>
+                    <a href="../org/requests">Club Requests</a>
+                    <a href="../user/logout">Log Out</a>
+                </div>
+
+                <form id="profile-hidden" action="user/profile" method="post">
+                    <input type="hidden"
+                    value="{{username}}" id="username" name="username">
+                    <input type="hidden" id="profileid" name="id">
+                </form>
+            </div>
+        </div>
+        
+        <div class="edit-profile">
+            <p>{{err}}</p>
+            
+            <form id="update-profile" action="../user/save-profile" method="post">
+                <h1>Edit {{username}}</h1>
+                    Username <input type="text" value="{{user.username}}" id="username" name="username"><br>
+                    Full Name <input type="text" value="{{user.realname}}" id="real-name" name="rn"><br>
+                    ID Number <input type="text" value="{{user.idNo}}" id="id" name="idno"><br>
+                    Password <input type="password" id="password" name="password"><br>
+                    Confirm Password <input type="password" id="confirm-password"><br>
+                    
+                    <hr>
+                    
+                    Birthdate <input type="date" id="birthdate" name="birthdate" value="{{user.birthday}}"><br>
+                    Degree Program (if college student) <input type="text" id="school-title" name="schooltitle" value="{{user.degree}}"><br>
+                    
+                    <h1>Contact Details</h1>
+                    E-Mail Address <input type="text" id="email" name="email" value="{{user.email}}"><br>
+                    Contact Number <input type="text" id="contact-no" name="contactno" value="{{user.contactNo}}"><br>
+                    Address <input type="text" size=60 id="address" name="address" value="{{user.address}}"><br>
+                    City and/or Province of Residence <input type="text" id="residence" name="residence" value="{{user.residence}}"><br>
+                    
+                    <input type="hidden" name="currUsername" value="{{username}}">
+                    <input type="hidden" name="id" value="{{user._id}}">
+                    <input type="submit" id="confirm-membership" value="Save Profile"><br>
+
+                <h1>Current Student Organizations</h1>
+                    <ol>
+                        Org 1<input type="checkbox" name="currOrg">
+                        Org 2<input type="checkbox" name="currOrg">
+                    </ol>
+                
+                <h1>Pending Student Organizations Applications</h1>
+                    <ol>
+                        Org 1<input type="checkbox" name="pendOrg">
+                        Org 2<input type="checkbox" name="pendOrg">
+                    </ol>
+            </form>
+            
+        </div>
+    </body>
+</html>

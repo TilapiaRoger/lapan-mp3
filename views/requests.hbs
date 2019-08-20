@@ -1,0 +1,135 @@
+<html>
+    <head>
+        <script src="jquery-3.4.1.js"></script>
+        
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        
+        <link rel="stylesheet" type="text/css" href="/css/main-pages.css">
+        
+        <script>
+            let adminMenu, userMenu;
+            
+            $(document).ready(
+                function(){
+                    let username = $("#username").attr("value")
+
+                    if(username == "webAdmin"){
+                        $("#profile-access").hide();
+                        $("#home-user").hide();
+                        $("#org-box").hide();
+                        $("#org-table").show()
+                        $("#home-admin").show();
+                        $(".user-icon").show();
+                    }
+                    else{
+                        $("#org-table").hide();
+                        $("#org-box").show();
+                        $("#home-user").show();
+                        $("#home-admin").hide();
+                        $(".user-icon").show();
+                    }
+                }
+            )
+        </script>
+        
+        <script>
+            let adminMenu, userMenu;
+            
+            $(document).ready(
+                function(){
+                    let username = $("#username").attr("name")
+
+                    if(username == "webAdmin"){
+                        $("#home-user").hide();
+                        $(".home-container").hide();
+                        $("#org-box").hide();
+                        $("#home-admin").show();
+                    }
+                    else{
+                        $("#org-table").hide();
+                        $("#home-user").show();
+                        $("#home-admin").hide();
+                    }
+                }
+            )
+        </script>
+    
+    </head>
+
+    <body>
+        <div class="main-menu">
+            <div id="home-user">
+                <a href="../home">Home</a>
+                <div id="student-org-menu">
+                    <button id="student-org-menu-buttton"> Student Clubs
+                    </button>
+                    <div id="student-org-options">
+                        <a href="../org/org-list">All Student Clubs</a>
+                        <a href="../org/my-org-list">My Student Clubs</a>
+                    </div>
+                </div>
+                <a href="#">About</a>
+            </div>
+            
+            <div id="home-admin">
+                <div id="home-user">
+                    <a href="home">Home</a>
+                    <div id="student-org-menu">
+                        <button id="student-org-menu-buttton"> Student Clubs
+                        </button>
+                        <div id="student-org-options">
+                            <a href="../org/org-list">All Student Clubs</a>
+                            <a href="../org/my-org-list">Add New Student Clubs</a>
+                        </div>
+                    </div>
+                    <a href="#">About</a>
+                </div>
+            </div>
+            
+            <div class="user-icon">
+                <button name="username" value="{{username}}" id="user-options-button">
+                    <img src="/photos/icons8-male-user-50.png">{{username}}
+                </button>
+                <div id="user-options">
+                    <a href="" onclick="
+                    $('#profile-hidden').submit(); return false;">Profile</a>
+                    <a href="../org/requests">Club Requests</a>
+                    <a href="../user/logout">Log Out</a>
+                </div>
+
+                <form id="profile-hidden" action="user/profile" method="post">
+                    <input type="hidden"
+                    value="{{username}}" id="username" name="username">
+                    <input type="hidden" id="profileid" name="id">
+                </form>
+            </div>
+        </div>
+            
+        <div class="user-requests">
+            <form action="delete" method="post">
+                <table id="requests-table">
+                    <tr>
+                        <th>Applied Org Name</th>
+                        <th>Requested Position</th>
+                        <th>Org Description</th>
+                        <th>Cancel Request</th>
+                    </tr>
+                    <tr>
+                        <td>Org 1</td>
+                        <td>G207</td>
+                        <td>This is an org.</td>
+                        <td><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td>Org 2</td>
+                        <td>G210</td>
+                        <td>This is an org.</td>
+                        <td><input type="checkbox"></td>
+                    </tr>
+                </table>
+                <input type="submit" value="Confirm" id="cancel-request">
+            </form>
+        </div>
+        
+    </body>
+</html>

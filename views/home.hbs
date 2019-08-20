@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <script src="jquery-3.4.1.js"></script>
+        
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        
+        <link rel="stylesheet" type="text/css" href="/css/main-pages.css">
+        
+        <script>
+            let adminMenu, userMenu;
+            
+            $(document).ready(
+                function(){
+                    let username = $("#username").attr("value")
+
+                    if(username == "webAdmin"){
+                        $("#profile-access").hide();
+                        $("#home-user").hide();
+                        $("#org-box").hide();
+                        $("#org-table").show()
+                        $("#home-admin").show();
+                        $(".user-icon").show();
+                    }
+                    else{
+                        $("#org-table").hide();
+                        $("#org-box").show();
+                        $("#home-user").show();
+                        $("#home-admin").hide();
+                        $(".user-icon").show();
+                    }
+                }
+            )
+        </script>
+    
+    </head>
+
+    <body>
+        <div class="main-menu">
+            <div id="home-user">
+                <a href="../home">Home</a>
+                <div id="student-org-menu">
+                    <button id="student-org-menu-buttton"> Student Clubs
+                    </button>
+                    <div id="student-org-options">
+                        <a href="../org/org-list">All Student Clubs</a>
+                        <a href="../org/my-org-list">My Student Clubs</a>
+                    </div>
+                </div>
+                <a href="#">About</a>
+            </div>
+            
+            <div id="home-admin">
+                <div id="home-user">
+                    <a href="home">Home</a>
+                    <div id="student-org-menu">
+                        <button id="student-org-menu-buttton"> Student Clubs
+                        </button>
+                        <div id="student-org-options">
+                            <a href="../org/org-list">All Student Clubs</a>
+                            <a href="../org/my-org-list">Add New Student Clubs</a>
+                        </div>
+                    </div>
+                    <a href="#">About</a>
+                </div>
+            </div>
+            
+            <div class="user-icon">
+                <button name="username" value="{{username}}" id="user-options-button">
+                    <img src="/photos/icons8-male-user-50.png">{{username}}
+                </button>
+                <div id="user-options">
+                    <a href="" onclick="
+                    $('#profile-hidden').submit(); return false;">Profile</a>
+                    <a href="../org/requests">Club Requests</a>
+                    <a href="../user/logout">Log Out</a>
+                </div>
+
+                <form id="profile-hidden" action="user/profile" method="post">
+                    <input type="hidden"
+                    value="{{username}}" id="username" name="username">
+                    <input type="hidden" id="profileid" name="id">
+                </form>
+            </div>
+        </div>
+            
+        <div class="home-container">
+            <div class="org-options">
+                <ul id="org-options-list">
+                    <li>
+                        <a href="#">
+                            All Orgs
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            My Current Orgs
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="org-list">
+                {{#each orgs}}
+                    <div data-id="{{_id}}" id="org-box" href="org/org-profile">
+                        <h1>{{orgName}}</h1>
+                        <img src="/photos/Joe%20Bouchard%20Polymer%20Clay.jpg"><br><br>
+                        <label id="hq">Headquarter Venue: {{room}}</label> 
+
+                        <p id="descript">
+                            {{description}}<br>
+                        </p>
+
+                        <form id="org-hidden" action="org/org-profile" method="post">
+                            <input type="hidden"
+                            value="{{username}}" id="username" name="username">
+                            <input type="hidden" name="orgName" value="{{orgName}}">
+                            <input type="hidden" name="room" value="{{room}}">
+                            <input type="hidden" name="description" value="{{description}}">
+                            <input type="submit" id="check-org-profile" value="View More Details">
+                        </form>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+        
+    </body>
+</html>

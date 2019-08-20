@@ -1,0 +1,148 @@
+<html>
+    <head>
+        <script src="jquery-3.4.1.js"></script>
+        
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        
+        <link rel="stylesheet" type="text/css" href="/css/main-pages.css">
+        
+        <script>
+            //let currentMenu, pendingMenu;
+            
+            let adminMenu, userMenu;
+            
+            $(document).ready(
+                function(){
+                    let username = $("#username").attr("value")
+
+                    if(username == "webAdmin"){
+                        $("#profile-access").hide();
+                        $("#home-user").hide();
+                        $("#org-box").hide();
+                        $("#org-table").show()
+                        $("#home-admin").show();
+                        $(".user-icon").show();
+                    }
+                    else{
+                        $("#org-table").hide();
+                        $("#org-box").show();
+                        $("#home-user").show();
+                        $("#home-admin").hide();
+                        $(".user-icon").show();
+                    }
+                }
+            )
+            
+            $(document).ready(
+                function(){
+                    showCurrentMembers();
+                    
+                    $("#pending-members").click(showPendingMembers);
+                    
+                    $("#current-members").click(showCurrentMembers);
+                    
+                    $("#current-members").click(showCurrentMembers);
+                    
+                    function showPendingMembers(){
+                        $(".pending-members-list").show();
+                        $(".current-members-list").hide();
+                    }
+                }
+            )
+            
+        </script>
+    </head>
+    
+    <body>
+        <div class="main-menu">
+            <div id="home-user">
+                <a href="../home">Home</a>
+                <div id="student-org-menu">
+                    <button id="student-org-menu-buttton"> Student Clubs
+                    </button>
+                    <div id="student-org-options">
+                        <a href="../org/org-list">All Student Clubs</a>
+                        <a href="../org/my-org-list">My Student Clubs</a>
+                    </div>
+                </div>
+                <a href="#">About</a>
+            </div>
+            
+            <div id="home-admin">
+                <div id="home-user">
+                    <a href="home">Home</a>
+                    <div id="student-org-menu">
+                        <button id="student-org-menu-buttton"> Student Clubs
+                        </button>
+                        <div id="student-org-options">
+                            <a href="../org/org-list">All Student Clubs</a>
+                            <a href="../org/my-org-list">Add New Student Clubs</a>
+                        </div>
+                    </div>
+                    <a href="#">About</a>
+                </div>
+            </div>
+            
+            <div class="user-icon">
+                <button name="username" value="{{username}}" id="user-options-button">
+                    <img src="/photos/icons8-male-user-50.png">{{username}}
+                </button>
+                <div id="user-options">
+                    <a href="" onclick="
+                    $('#profile-hidden').submit(); return false;">Profile</a>
+                    <a href="../org/requests">Club Requests</a>
+                    <a href="../user/logout">Log Out</a>
+                </div>
+
+                <form id="profile-hidden" action="user/profile" method="post">
+                    <input type="hidden"
+                    value="{{username}}" id="username" name="username">
+                    <input type="hidden" id="profileid" name="id">
+                </form>
+            </div>
+        </div>
+        
+        <div class="admin-menu">
+            <ul>
+                <a href="#" id="pending-members">Pending Members</a>
+                <a href="#" id="current-members">Current Members</a>
+                <a href="#" id="officers">Pending Officers</a>
+                <a href="#" id="officers">Current Officers</a>
+            </ul>
+        </div>
+        
+        <div class="members-list">
+            <h1 id="current-selected-list-title">Current Members</h1>
+            
+            <form action="result-request" method="post">
+                <table id="pending-members-table">
+                    <tr>
+                        <th>Username</th>
+                        <th>Real Name</th>
+                        <th>ID Number</th>
+                        <th>Accept Membership?</th>
+                    </tr>
+                    <tr>
+                        <td>User 1</td>
+                        <td>John Santos</td>
+                        <td>11523423</td>
+                        <td><input type="checkbox"></td>
+
+                    </tr>
+                    <tr>
+                        <td>User 2</td>
+                        <td>Uni Egg</td>
+                        <td>11523476</td>
+                        <td><input type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td>User 3</td>
+                        <td>James Lake</td>
+                        <td>11732476</td>
+                        <td><input type="checkbox"></td>
+                    </tr>
+                </table>
+                <input type="submit" value="Confirm Change" id="member-change-submit">
+            </form>
+        </div>
+    </body>

@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <script src="jquery-3.4.1.js"></script>
+        
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        
+        <link rel="stylesheet" type="text/css" href="/css/main-pages.css">
+        
+        <script src="../menuJS.js">
+        </script>
+        
+    </head>
+
+    <body>
+        <div class="user-form" id="register" action="login" method="post">
+            <div class="general-form">
+                <form id="register-form" action="user/register" method="post">
+                    <h1>General Info</h1>
+                    Username <input type="text" value="Username" id="username" name="username"><br>
+                    Full Name <input type="text" value="Full Name (e.g. Juan Santos)" id="real-name" name="rn"><br>
+                    ID Number <input type="text" value="E.g. 11512321" id="id" name="idno"><br>
+                    Password <input type="password" id="password" name="password"><br>
+                    Confirm Password <input type="password" id="confirm-password"><br>
+                    
+                    <hr>
+                    
+                    Birthdate <input type="date" id="birthdate" name="birthdate"><br>
+                    Degree Program) <input type="text" id="school-title" name="schooltitle"><br>
+                    City and/or Province of Residence <input type="text" id="residence" name="residence"><br>
+                    
+                    <h1>Contact Details</h1>
+                    E-Mail Address <input type="text" id="email" name="email"><br>
+                    Contact Number <input type="text" id="contact-no" name="contactno"><br>
+                    Address <input type="text" size=60 id="address" name="address"><br>
+                    
+                    <input type="submit" id="confirm-membership" value="Register" ><br>
+                </form>
+                <a href="login.html" id="next-page">Cancel Registration</a>
+            </div>
+        </div>
+    </body>
+</html>
