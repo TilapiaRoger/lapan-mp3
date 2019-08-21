@@ -5,12 +5,13 @@ const session = require("express-session");
 const bodyparser = require("body-parser");
 const cookieparser = require("cookie-parser");
 const mongoose = require("mongoose");
+const mongodb = require("mongodb");
 
 const auth = require("../middlewares/auth");
 
-const {User} = require("../models/user.js");
+const User = require("../models/user.js");
 
-const {RegMemberOrg} = require("../models/student-org.js");
+const RegMemberOrg = require("../models/student-org.js");
 const {ExclusiveMemberOrg} = require("../models/student-org.js");
 
 const {RegOrgMember} = require("../models/org-member.js");
@@ -19,13 +20,28 @@ const {RegOrgOfficer} = require("../models/org-member.js");
 const {PendOrgOfficer} = require("../models/org-member.js");
 const {interviewSched} = require("../models/org-member.js");
 
+var Org = RegMemberOrg;
+
 router.use("/user", require("./user"))
 router.use("/org", require("./org"))
 
-mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost:27017/webapde", {
-    useNewUrlParser: true
-});
+/*mongodb.MongoClient.connect("mongodb://localhost:27017/", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}, function(err, db){
+    var orgsDB = db.db("webapde")
+    var Org = orgsDB.collection("regMemberOrgs").aggregate([
+        {
+        $lookup: {
+            from: "exclusiveMemberOrgs",
+            localField: "_id",
+            foreignField: "interviewDateStartandEnd",
+            as: "orgs"
+            }
+        }
+    ])
+    console.log("Merged.");
+})*/
 
 const urlencoder = bodyparser.urlencoded({
     extended: true
@@ -45,20 +61,129 @@ router.get(["/", "/home"], function(req, res){
 
         req.session.err = null;
         req.session.msg = null;
+        
+        let user = {
+            username: req.session.username
+        }
+        
+        User.get(user).then(function(user){
+            console.log("Authenticating: " + user)
 
-        mongoose.RegMemberOrg.aggregate([
-            {
-                $lookup:
-                {
-                    from: "ExclusiveMemberOrg",
-                    localField: "orgName",
-                    foreignField: "interviewDateStartandEnd",
-                    as: "Org"
+            req.session.username = user.username;
+
+            console.log("HOME")
+
+            RegMemberOrg.getAll().then(function(orgs){
+                res.render("home", {
+                    curUser: user,
+                    orgs: orgs
+                })
+            })
+            
+        }, function(error){
+            res.send(error)
+        }).catch(function(error){
+              //assert(error)
+        })
+        
+        /*User.findOne(
+            {username: req.session.username
+             //,password: password
+            },
+            function(err, doc){
+                if(err){
+                    res.send(err)
                 }
-            }
-        ])
+                else if(!doc){
+                    res.send("User does not exist. :(")
 
-        Org.find({
+                }
+                else{
+                    console.log(doc)
+                    RegMemberOrg.getAll().then(function(orgs){
+                        res.render("home", {
+                            curUser: doc,
+                            orgs: orgs
+                        })
+                    })
+                }
+
+            }
+        )*/
+        
+        
+        
+        /*let user = {
+            username: req.session.username
+        }
+        
+        User.get(user).then(function(user){
+            console.log("Authenticating: " + newUser)
+
+            if(user){
+                req.session.username = user.username;
+
+                console.log("HOME")
+
+                RegMemberOrg.getAll().then(function(orgs){
+                    res.render("home", {
+                        curUser: user,
+                        orgs: orgs
+                    })
+                })
+            }
+        }, function(error){
+            res.send(error)
+        }).catch(function(error){
+              //assert(error)
+        })*/
+
+        
+        /*User.get(user).then(function(user){
+        console.log("Authenticating: " + newUser)
+        
+        if(newUser){
+            req.session.username = user.username;
+           
+            console.log("HOME")
+           
+            RegMemberOrg.getAll().then(function(orgs){
+                res.render("home", {
+                    curUser: user,
+                    orgs: orgs
+                })
+            })
+        }
+        }, function(error){
+            res.send(error)
+        }).catch(function(error){
+              //assert(error)
+        })*/
+        
+        
+        /*User.get({
+            username: req.session.username
+        },
+        function(err, doc){
+            if(err){
+                
+            }
+            else if (!doc){
+                res.send("User does not exist. :(")
+            }
+            else{
+                RegMemberOrg.getAll().then(function(orgs){
+                    res.render("home", {
+                        curUser: doc,
+                        orgs: orgs
+                    })
+                })
+            }
+            
+            }
+        )*/
+        
+        /*RegMemberOrg.find({
 
         },
         function(err, docs){
@@ -75,7 +200,7 @@ router.get(["/", "/home"], function(req, res){
                     username : req.session.username
                 })
             }
-        })
+        })*/
     }
     else{
         res.render("login.hbs")

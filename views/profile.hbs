@@ -64,8 +64,8 @@
             </div>
             
             <div class="user-icon">
-                <button name="username" value="{{username}}" id="user-options-button">
-                    <img src="/photos/icons8-male-user-50.png">{{username}}
+                <button name="username" value="{{user.username}}" id="user-options-button">
+                    <img src="/photos/icons8-male-user-50.png">{{user.username}}
                 </button>
                 <div id="user-options">
                     <a href="" onclick="
@@ -76,7 +76,7 @@
 
                 <form id="profile-hidden" action="user/profile" method="post">
                     <input type="hidden"
-                    value="{{username}}" id="username" name="username">
+                    value="{{user.username}}" id="username" name="username">
                     <input type="hidden" id="profileid" name="id">
                 </form>
             </div>

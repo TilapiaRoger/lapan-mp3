@@ -1,17 +1,19 @@
 const express = require("express");
 const router = express.Router();
+
 const session = require("express-session");
 const bodyparser = require("body-parser");
 const cookieparser = require("cookie-parser");
 const mongoose = require("mongoose");
+const mongodb = require("mongodb");
 
 const auth = require("../middlewares/auth");
 
 const {User} = require("../models/user.js");
-const {regMemberOrg} = require("../models/student-org.js");
-const {exclusiveMemberOrg} = require("../models/student-org.js");
 
-const {interview} = require("../models/org-member.js");
+const {RegMemberOrg} = require("../models/student-org.js");
+const {ExclusiveMemberOrg} = require("../models/student-org.js");
+
 const {RegOrgMember} = require("../models/org-member.js");
 const {PendOrgMember} = require("../models/org-member.js");
 const {RegOrgOfficer} = require("../models/org-member.js");
@@ -49,8 +51,7 @@ router.get("/org-list", function(req, res){
     req.session.err = null;
     req.session.msg = null;
     
-    
-    db.collection("regMemberOrg").aggregate([
+    /*db.collection("regMemberOrg").aggregate([
         {
             $lookup:
             {
@@ -60,7 +61,7 @@ router.get("/org-list", function(req, res){
                 as: "Org"
             }
         }
-    ])
+    ])*/
     
     Org.find({
         

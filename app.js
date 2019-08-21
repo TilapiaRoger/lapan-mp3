@@ -5,7 +5,6 @@ const bodyparser = require("body-parser");
 const cookieparser = require("cookie-parser");
 const mongoose = require("mongoose");
 
-const router = express.Router();
 const app = express();
 
 mongoose.Promise = global.Promise;
@@ -31,5 +30,5 @@ app.use(session({
 app.use(require("./controllers"))
 
 app.listen(3000, function(){
-    console.log("MP3 server is now connected. Welcome to Student Club Joiner")
+    console.log("MP3 server is now connected. Welcome to Student Club Joiner.")
 })

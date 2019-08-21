@@ -65,8 +65,8 @@
             </div>
             
             <div class="user-icon">
-                <button name="username" value="{{username}}" id="user-options-button">
-                    <img src="/photos/icons8-male-user-50.png">{{username}}
+                <button name="username" value="{{curUser.username}}" id="user-options-button">
+                    <img src="/photos/icons8-male-user-50.png">{{curUser.username}}
                 </button>
                 <div id="user-options">
                     <a href="" onclick="
@@ -75,9 +75,9 @@
                     <a href="../user/logout">Log Out</a>
                 </div>
 
-                <form id="profile-hidden" action="user/profile" method="post">
+                <form id="profile-hidden" action="../user/profile" method="post">
                     <input type="hidden"
-                    value="{{username}}" id="username" name="username">
+                    value="{{curUser.username}}" id="username" name="username">
                     <input type="hidden" id="profileid" name="id">
                 </form>
             </div>
@@ -86,6 +86,11 @@
         <div class="home-container">
             <div class="org-options">
                 <ul id="org-options-list">
+                    <li>
+                        <a href="#">
+                            Currently Available Orgs
+                        </a>
+                    </li>
                     <li>
                         <a href="#">
                             All Orgs
@@ -102,17 +107,20 @@
             <div class="org-list">
                 {{#each orgs}}
                     <div data-id="{{_id}}" id="org-box" href="org/org-profile">
+                        
                         <h1>{{orgName}}</h1>
                         <img src="/photos/Joe%20Bouchard%20Polymer%20Clay.jpg"><br><br>
+                        <h5>Application Date: </h5> 
                         <label id="hq">Headquarter Venue: {{room}}</label> 
 
                         <p id="descript">
                             {{description}}<br>
                         </p>
-
+                        
+                        
                         <form id="org-hidden" action="org/org-profile" method="post">
                             <input type="hidden"
-                            value="{{username}}" id="username" name="username">
+                            value="{{curUser._id}}" id="username" name="username">
                             <input type="hidden" name="orgName" value="{{orgName}}">
                             <input type="hidden" name="room" value="{{room}}">
                             <input type="hidden" name="description" value="{{description}}">

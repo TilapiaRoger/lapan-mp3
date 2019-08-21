@@ -7,19 +7,14 @@ const mongoose = require("mongoose");
 
 const auth = require("../middlewares/auth");
 
-const {User} = require("../models/user.js");
-const {regMemberOrg} = require("../models/student-org.js");
-const {exclusiveMemberOrg} = require("../models/student-org.js");
+const User = require("../models/user.js");
+const RegMemberOrg = require("../models/student-org.js");
+const ExclusiveMemberOrg = require("../models/student-org.js");
 
-const {interview} = require("../models/org-member.js");
 const {RegOrgMember} = require("../models/org-member.js");
 const {PendOrgMember} = require("../models/org-member.js");
 const {RegOrgOfficer} = require("../models/org-member.js");
 const {PendOrgOfficer} = require("../models/org-member.js");
-const {interviewSched} = require("../models/org-member.js");
-
-
-const app = express();
 
 const urlencoder = bodyparser.urlencoded({
     extended: true
@@ -40,8 +35,8 @@ router.use(session({
 }))
 
 router.post("/login", function(req, res){
-    var //userId,
-    username,
+    console.log("Logged in")
+    var username,
     password,
     realname,
     idNo,
@@ -55,23 +50,45 @@ router.post("/login", function(req, res){
     contactNo,
     address;
     
-    username = req.body.username;
-    password = req.body.password;
+    let user = {
+        username: req.body.username,
+        password: req.body.password
+    }
+    
     realname = req.body.rn;
     idNo = req.body.idno;
     birthday = req.body.birthdate;
-    school  = req.body.school;
     grade = req.body.schooltitle;
     job = req.body.job;
     
     residence = req.body.residence;
-    favAlbums = req.body.favAlbums;
     
     email = req.body.email;
     contactNo = req.body.contactno;
     address = req.body.address;
-    
-    User.findOne(
+
+    User.authenticate(user).then(function(newUser){
+        console.log("Authenticating: " + newUser)
+        
+        if(newUser){
+            req.session.username = user.username;
+           
+            console.log("HOME")
+           
+            res.redirect("/")
+            /*RegMemberOrg.getAll().then(function(orgs){
+                res.render("home", {
+                    curUser: newUser,
+                    orgs: orgs
+                })
+            })*/
+        }
+    }, function(error){
+        res.send(error)
+    }).catch(function(error){
+          //assert(error)
+      })
+    /*User.findOne(
         {username: username,
          password: password
         },
@@ -90,61 +107,48 @@ router.post("/login", function(req, res){
             }
 
         }
-    )
+    )*/
     
 })
 
-router.get("/register.html", function(req, res){
-    const path = require("path")
-    res.sendFile(path.join(__dirname, '../public', "register.html"))
+router.get("/new-user", function(req, res){
+    res.render("register.hbs")
 })
 
 router.post("/register", function(req, res){
-    var userId,
-    username,
-    password,
-    realname,
-    idNo,
-    birthday,
-    school,
-    degree,
-    job,
-    residence,
-        
-    email,
-    contactNo,
-    address;
+    let user = {
+        username: req.body.username,
+        password: req.body.password,
+        realname: req.body.rn,
+        idNo: req.body.idno,
+        birthday: req.body.birthdate,
+        degree: req.body.schooltitle,
+        email: email = req.body.email,
+        contactNo: req.body.contactno,
+        address: req.body.address,
+        residence: req.body.residence,
+    }
     
-    username = req.body.username;
-    password = req.body.password;
-    realname = req.body.rn;
-    idNo = req.body.idno;
-    birthday = req.body.birthdate;
-    school  = req.body.school;
-    degree = req.body.schooltitle;
-    job = req.body.job;
-    
-    residence = req.body.residence;
-    
-    email = req.body.email;
-    contactNo = req.body.contactno;
-    address = req.body.address;
-    
-    let user = new User({
-        userId,
-        username,
-        password,
-        realname,
-        idNo,
-        birthday,
-        degree,
-        email,
-        contactNo,
-        address,
-        residence,
-    })
-    
-    user.save().then(
+    User.create(user).then(function(user){
+        req.session.username = user.username;
+           
+            console.log("HOME")
+            
+            res.redirect("/")
+            
+            /*RegMemberOrg.getAll().then(function(orgs){
+                res.render("home", {
+                    curUser: user,
+                    orgs: orgs
+                })
+            })*/
+        },
+        function(error){
+            res.send(error + " Registration failed.")
+        }).catch(function(error){
+          //assert(error)
+      })
+    /*user.save().then(
         function(doc){
             console.log(doc);
             req.session.username = doc.username;
@@ -165,61 +169,34 @@ router.post("/register", function(req, res){
         function(err){
             res.send(err);
         }
-    );
+    );*/
 })
 
 router.post("/profile", function(req, res){
-    var username,
-    password,
-    realname,
-    idNo,
-    birthday,
-    school,
-    grade,
-    job,
-    residence,
-        
-    email,
-    contactNo,
-    address;
-
-    username = req.body.username;
-    realname = req.body.rn;
-    idNo = req.body.idno;
-    birthday = req.body.birthdate;
-    grade = req.body.schooltitle;
-    job = req.body.job;
-    
-    residence = req.body.residence;
-    
-    email = req.body.email;
-    contactNo = req.body.contactno;
-    address = req.body.address;
-    
     console.log("User " + username);
     
-    User.findOne(
-        {username: username
-         //,password: password
-        },
-        function(err, doc){
-            if(err){
-                res.send(err)
-            }
-            else if(!doc){
-                res.send("User does not exist. :(")
+    let user = {
+        username: req.session.username
+    }
+        
+    User.get(user).then(function(user){
+        console.log("Authenticating: " + user)
 
-            }
-            else{
-                console.log(doc)
-                res.render("profile.hbs", {
-                    user: doc,
-                    username : req.session.username
-                })
-            }
-            
-        }
-    )
+        req.session.username = user.username;
+
+        console.log("HOME")
+
+        RegMemberOrg.getAll().then(function(orgs){
+            res.render("profile", {
+                user: user
+            })
+        })
+
+    }, function(error){
+        res.send(error)
+    }).catch(function(error){
+          //assert(error)
+    })
     
 })
 
@@ -229,25 +206,29 @@ router.get("/edit-profile", function(req, res){
     id = req.body.id;
     username = req.body.username;
     
-    console.log("User ID " + id);
     console.log("User " + username);
     
-    User.findOne({
-        _id: id
-    }, 
-    function(err, doc){
-        if (err){
-            res.render("edit-profile.hbs", {
-                err
+    let user = {
+        username: username
+    }
+        
+    User.get(user).then(function(user){
+        console.log("Authenticating: " + user)
+
+        req.session.username = user.username;
+
+        console.log("HOME")
+
+        RegMemberOrg.getAll().then(function(orgs){
+            res.render("edit-profile", {
+                user: user
             })
-        }
-        else{
-            res.render("edit-profile.hbs", {
-                user: doc,
-                username : req.session.username
-            })
-            console.log("Username: " + username)
-        }
+        })
+
+    }, function(error){
+        res.send(error)
+    }).catch(function(error){
+          //assert(error)
     })
     
 })
