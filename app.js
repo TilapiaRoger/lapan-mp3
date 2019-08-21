@@ -6,6 +6,8 @@ const cookieparser = require("cookie-parser");
 const mongoose = require("mongoose");
 
 const app = express();
+const http = require("http");
+const port = process.env.PORT || 3000
 
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://localhost:27017/lapanmp3", {
@@ -29,6 +31,6 @@ app.use(session({
 
 app.use(require("./controllers"))
 
-app.listen(3000, function(){
+app.listen(port, function(){
     console.log("MP3 server is now connected. Welcome to Student Club Joiner.")
 })
