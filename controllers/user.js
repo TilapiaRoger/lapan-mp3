@@ -173,7 +173,7 @@ router.post("/register", function(req, res){
 })
 
 router.post("/profile", function(req, res){
-    console.log("User " + username);
+    //console.log("User " + username);
     
     let user = {
         username: req.session.username

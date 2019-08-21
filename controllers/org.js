@@ -63,23 +63,28 @@ router.get("/org-list", function(req, res){
         }
     ])*/
     
-    Org.find({
-        
-    },
-    function(err, docs){
-        if(err){
-            res.render("org-list.hbs", {
-                err
+    let user = {
+        username: req.session.username
+    }
+
+    User.get(user).then(function(user){
+        console.log("Authenticating: " + user)
+
+        req.session.username = user.username;
+
+        console.log("HOME")
+
+        RegMemberOrg.getAll().then(function(orgs){
+            res.render("org-list", {
+                curUser: user,
+                orgs: orgs
             })
-        }
-        else{
-            res.render("org-list.hbs", {
-                orgs: docs,
-                err,
-                msg,
-                username : req.session.username
-            })
-        }
+        })
+
+    }, function(error){
+        res.send(error)
+    }).catch(function(error){
+          //assert(error)
     })
     
     /*exclusiveMemberOrg.find({
