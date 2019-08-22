@@ -4,11 +4,29 @@ const session = require("express-session");
 const bodyparser = require("body-parser");
 const cookieparser = require("cookie-parser");
 const mongoose = require("mongoose");
+const mongodb = require("mongodb")
+
+var MongoClient = mongodb.MongoClient;
+var mongoUrl = "mongodb://localhost:27017/lapanmp3"
 
 const app = express();
 const http = require("http");
 const port = process.env.PORT || 3000
 
+MongoClient.connect(mongoUrl,{
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+    }
+    , function(err, db){
+    if (err){
+        console.log("Cannot connect")
+    }
+    else{
+        
+        console.log()
+        console.log("Connected")
+    }
+})
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://localhost:27017/lapanmp3", {
     useNewUrlParser: true

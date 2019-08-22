@@ -281,7 +281,7 @@ router.post("/submit-application", function(req, res){
                     }
                 })*/
             console.log("ORG APPLY: " + org)
-            res.render("member-app", {
+            res.render("org-profile", {
                 user: user,
                 org: org
             })
@@ -294,11 +294,7 @@ router.post("/submit-application", function(req, res){
     }).catch(function(error){
           //assert(error)
     })
-    
-    res.render("org-profile", {
-        username : req.session.username
-    })
-}
+})
 
 /*router.post("/submit-application", function(req, res){
     var username,
