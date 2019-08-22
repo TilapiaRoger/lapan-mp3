@@ -1,6 +1,13 @@
 const mongoose = require("mongoose")
 const crypto = require("crypto")
 
+var sch = mongoose.Schema;
+
+var orgMembershipStatusSchema = mongoose.Schema({
+    currentOrgsId: [sch.Types.ObjectId],
+    pendingOrgsId: [sch.Types.ObjectId]
+})
+
 var userSchema = mongoose.Schema({
     username: String,
     password: String,
@@ -11,7 +18,8 @@ var userSchema = mongoose.Schema({
     email: String,
     contactNo: String,
     address: String,
-    residence: String
+    residence: String,
+    orgLists: [orgMembershipStatusSchema]
 })
 
 userSchema.pre("save", function(next){

@@ -39,7 +39,6 @@ var orgSchema = mongoose.Schema({
 })
 
 //org database
-var regOrgSchema = orgSchema
 
 var exclusiveOrgSchema = mongooseextend(orgSchema, {
     interviewDateStartandEnd: [Date]
@@ -75,6 +74,21 @@ module.exports.getAll = function(){
       })
     })
 } 
+
+module.exports.get = function(org){
+    return new global.Promise(function(resolve, reject){
+      RegMemberOrg.findOne({
+          orgName : org.orgName
+      }).then(function(org){
+          resolve(org)
+      }, function(err){
+          reject(err)
+      })
+    }).catch(function(error){
+        console.log("Failed to show org details")
+          //assert(error)
+      })
+}
 //mongoose.model("exclusiveMemberOrgs", exclusiveOrgSchema)
 
 /*module.exports = {

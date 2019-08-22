@@ -1,0 +1,78 @@
+<html>
+    <header>
+        <script src="jquery-3.4.1.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        <link href="public/main-pages.css" type="text/css" rel="stylesheet">
+        
+        <script>
+            let adminMenu, userMenu;
+            
+            $(document).ready(
+                function(){
+                    let username = $("#username").attr("value")
+
+                    if(username == "webAdmin"){
+                        $("#profile-access").hide();
+                        $("#home-user").hide();
+                        $("#org-box").hide();
+                        $("#org-table").show()
+                        $("#home-admin").show();
+                        $(".user-icon").show();
+                    }
+                    else{
+                        $("#org-table").hide();
+                        $("#org-box").show();
+                        $("#home-user").show();
+                        $("#home-admin").hide();
+                        $(".user-icon").show();
+                    }
+                }
+            )
+            
+        </script>
+        
+    </header>
+
+    <body>
+        <h1 name="orgName">{{org.orgName}}</h1>
+        
+        <form id="apply-member" action="../org/submit-application" method="post">
+            <div class="member-app-form">
+                <div id="dept-choice">
+                    <h1>Choose a department</h1>
+                        {{#each org.openPositions}}
+                            {{this.positionName}} <input type="radio" name="dept" value="{{this.positionName}}"> <br>
+                        {{/each}}
+                </div>
+                
+                <div id="general-question">
+                    {{#if this.positionName}}
+                        <h1>General Questions</h1>
+                        {{#each this.positionQuestions}}
+                            {{this}}<textarea cols="50" rows="5"></textarea><br>
+                        {{/each}}
+                    {{/if}}
+                </div>
+                
+                <input type="hidden" name="userId" value="{{user._id}}"
+                <input type="submit" id="submit" value="Finish Applying">
+            </div>
+        </form>
+        
+            <!--<div id="creatives-requirements">
+                <h1>Special Creatives Requirement</h1>
+                <ol>
+                    <li>Submit at least 3 of your best artworks in any medium so far.</li>
+                    <li>In addition, create the following 2 works</li>
+                        <ol>
+                            <li>A digital poster for a Mow's gig. You can list any band/s, real or imaginary, for the hypothetical gig.</li>
+                            <li>Fan art of your current favorite band.</li>
+                        </ol>
+                    <li>Once finished, submit your works online until 11:59pm on the set deadline</li>
+                </ol>
+                <form>
+                    <a href="jo-schedule.html" id="next-page">Next</a>
+                </form>
+            </div>-->
+    </body>
+</html>

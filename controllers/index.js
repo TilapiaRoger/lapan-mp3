@@ -25,23 +25,6 @@ var Org = RegMemberOrg;
 router.use("/user", require("./user"))
 router.use("/org", require("./org"))
 
-/*mongodb.MongoClient.connect("mongodb://localhost:27017/", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}, function(err, db){
-    var orgsDB = db.db("webapde")
-    var Org = orgsDB.collection("regMemberOrgs").aggregate([
-        {
-        $lookup: {
-            from: "exclusiveMemberOrgs",
-            localField: "_id",
-            foreignField: "interviewDateStartandEnd",
-            as: "orgs"
-            }
-        }
-    ])
-    console.log("Merged.");
-})*/
 
 const urlencoder = bodyparser.urlencoded({
     extended: true
@@ -78,6 +61,7 @@ router.get(["/", "/home"], function(req, res){
                     curUser: user,
                     orgs: orgs
                 })
+                console.log(orgs)
             })
             
         }, function(error){
@@ -86,126 +70,9 @@ router.get(["/", "/home"], function(req, res){
               //assert(error)
         })
         
-        /*User.findOne(
-            {username: req.session.username
-             //,password: password
-            },
-            function(err, doc){
-                if(err){
-                    res.send(err)
-                }
-                else if(!doc){
-                    res.send("User does not exist. :(")
-
-                }
-                else{
-                    console.log(doc)
-                    RegMemberOrg.getAll().then(function(orgs){
-                        res.render("home", {
-                            curUser: doc,
-                            orgs: orgs
-                        })
-                    })
-                }
-
-            }
-        )*/
-        
-        
-        
-        /*let user = {
-            username: req.session.username
-        }
-        
-        User.get(user).then(function(user){
-            console.log("Authenticating: " + newUser)
-
-            if(user){
-                req.session.username = user.username;
-
-                console.log("HOME")
-
-                RegMemberOrg.getAll().then(function(orgs){
-                    res.render("home", {
-                        curUser: user,
-                        orgs: orgs
-                    })
-                })
-            }
-        }, function(error){
-            res.send(error)
-        }).catch(function(error){
-              //assert(error)
-        })*/
-
-        
-        /*User.get(user).then(function(user){
-        console.log("Authenticating: " + newUser)
-        
-        if(newUser){
-            req.session.username = user.username;
-           
-            console.log("HOME")
-           
-            RegMemberOrg.getAll().then(function(orgs){
-                res.render("home", {
-                    curUser: user,
-                    orgs: orgs
-                })
-            })
-        }
-        }, function(error){
-            res.send(error)
-        }).catch(function(error){
-              //assert(error)
-        })*/
-        
-        
-        /*User.get({
-            username: req.session.username
-        },
-        function(err, doc){
-            if(err){
-                
-            }
-            else if (!doc){
-                res.send("User does not exist. :(")
-            }
-            else{
-                RegMemberOrg.getAll().then(function(orgs){
-                    res.render("home", {
-                        curUser: doc,
-                        orgs: orgs
-                    })
-                })
-            }
-            
-            }
-        )*/
-        
-        /*RegMemberOrg.find({
-
-        },
-        function(err, docs){
-            if(err){
-                res.render("home.hbs", {
-                    err
-                })
-            }
-            else{
-                res.render("home.hbs", {
-                    orgs: docs,
-                    err,
-                    msg,
-                    username : req.session.username
-                })
-            }
-        })*/
     }
     else{
         res.render("login.hbs")
-        //const path = require("path")
-        //res.sendFile(path.join(__dirname, '../public', "login.html"))
     }
 })
 

@@ -65,8 +65,8 @@
             </div>
             
             <div class="user-icon">
-                <button name="username" value="{{username}}" id="user-options-button">
-                    <img src="/photos/icons8-male-user-50.png">{{username}}
+                <button name="username" value="{{user.username}}" id="user-options-button">
+                    <img src="/photos/icons8-male-user-50.png">{{user.username}}
                 </button>
                 <div id="user-options">
                     <a href="" onclick="
@@ -75,9 +75,9 @@
                     <a href="../user/logout">Log Out</a>
                 </div>
 
-                <form id="profile-hidden" action="user/profile" method="post">
+                <form id="profile-hidden" action="../user/profile" method="post">
                     <input type="hidden"
-                    value="{{username}}" id="username" name="username">
+                    value="{{user.username}}" id="username" name="username">
                     <input type="hidden" id="profileid" name="id">
                 </form>
             </div>
@@ -95,7 +95,7 @@
                 List of Currently Applicable Positions
                 <ol id="List of Currently Applicable Positions:">
                     {{#each org.openPositions}}
-                        <li>{{this}}</li>
+                        <li>{{this.positionName}}</li>
                     {{/each}}
                 </ol>
             </div>
@@ -103,7 +103,7 @@
         
         <form id="apply-membership" action="org/apply-membership" method="post">
             <input type="hidden"
-            value="{{username}}" id="username" name="username">
+            value="{{user.username}}" id="username" name="username">
             <input type="submit" value="Apply for Membership" action="apply-membership" method="post">
         </form>
     </body>

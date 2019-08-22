@@ -9,9 +9,9 @@ const mongodb = require("mongodb");
 
 const auth = require("../middlewares/auth");
 
-const {User} = require("../models/user.js");
+const User = require("../models/user.js");
 
-const {RegMemberOrg} = require("../models/student-org.js");
+const RegMemberOrg = require("../models/student-org.js");
 const {ExclusiveMemberOrg} = require("../models/student-org.js");
 
 const {RegOrgMember} = require("../models/org-member.js");
@@ -51,32 +51,20 @@ router.get("/org-list", function(req, res){
     req.session.err = null;
     req.session.msg = null;
     
-    /*db.collection("regMemberOrg").aggregate([
-        {
-            $lookup:
-            {
-                from: "exclusiveMemberOrg",
-                localField: "orgName",
-                foreignField: "interviewDateStartandEnd",
-                as: "Org"
-            }
-        }
-    ])*/
-    
     let user = {
         username: req.session.username
     }
-
+        
     User.get(user).then(function(user){
         console.log("Authenticating: " + user)
 
         req.session.username = user.username;
 
-        console.log("HOME")
+        console.log("")
 
         RegMemberOrg.getAll().then(function(orgs){
             res.render("org-list", {
-                curUser: user,
+                user: user,
                 orgs: orgs
             })
         })
@@ -86,88 +74,34 @@ router.get("/org-list", function(req, res){
     }).catch(function(error){
           //assert(error)
     })
-    
-    /*exclusiveMemberOrg.find({
-        
-    },
-    function(err, docs){
-        if(err){
-            res.render("org-list.hbs", {
-                err
-            })
-        }
-        else{
-            res.render("org-list.hbs", {
-                exOrgs: docs,
-                err,
-                msg,
-                username : req.session.username
-            })
-        }
-    })
-    
-    regMemberOrg.find({
-        
-    },
-    function(err, docs){
-        if(err){
-            res.render("org-list.hbs", {
-                err
-            })
-        }
-        else{
-            res.render("org-list.hbs", {
-                regOrgs: docs,
-                err,
-                msg,
-                username : req.session.username
-            })
-        }
-    })*/
 })
 
 
 router.get("/my-org-list", function(req, res){
-    console.log("Organization List Accessed")
-    var err, msg;
-    
-    err = req.session.err;
-    msg = req.session.msg;
-    
-    req.session.err = null;
-    req.session.msg = null;
-    
-    db.regMemberOrg.aggregate([
-        {
-            $lookup:
-            {
-                from: "exclusiveMemberOrg",
-                localField: "orgName",
-                foreignField: "interviewDateStartandEnd",
-                as: "Org"
-            }
-        }
-    ])
-    
-    Org.find({
-        
-    },
-    function(err, docs){
-        if(err){
-            res.render("org-list.hbs", {
-                err
-            })
-        }
-        else{
-            res.render("my-orgs-list.hbs", {
-                orgs: docs,
-                err,
-                msg,
-                username : req.session.username
-            })
-        }
+    let user = {
+        username: req.session.username
     }
-    )
+        
+    User.get(user).then(function(user){
+        console.log("Authenticating: " + user)
+
+        req.session.username = user.username;
+
+        console.log("HOME")
+
+        RegMemberOrg.getAll().then(function(orgs){
+            console.log(orgs)
+            res.render("org-list", {
+                user: user,
+                orgs: orgs
+            })
+        })
+
+    }, function(error){
+        res.send(error)
+    }).catch(function(error){
+          //assert(error)
+    })
 })
 
 router.get("/my-org-members", function(req, res){
@@ -183,39 +117,37 @@ router.get("/my-org-members", function(req, res){
 })*/
 
 router.post("/org-profile", function(req, res){
-    var //userId,
-    orgName,
-    room,
-    description;
-
-    orgName = req.body.orgName;
-    room = req.body.room;
-    description = req.body.description;
+    var user = {
+        username: req.session.username
+    }
     
-    console.log("User " + orgName);
     
-    Org.findOne(
-        {orgName: orgName,
-         description: description
-        },
-        function(err, doc){
-            if(err){
-                res.send(err)
-            }
-            else if(!doc){
-                res.send("User does not exist. :(")
+    User.get(user).then(function(user){
+        req.session.username = user.username;
 
-            }
-            else{
-                console.log(doc)
-                res.render("org-profile.hbs", {
-                    org: doc,
-                    username : req.session.username
-                })
-            }
-            
+        var org = {
+            orgName: req.body.orgName
         }
-    )
+        
+        console.log(org);
+        
+        RegMemberOrg.get(org).then(function(org){
+            req.body.orgName = org.orgName;
+            
+            console.log("ORG PROFILE: " + org)
+            res.render("org-profile", {
+                user: user,
+                org: org
+            })
+        }).catch(function(error){
+          //assert(error)
+    })
+
+    }, function(error){
+        res.send(error)
+    }).catch(function(error){
+          //assert(error)
+    })
     
 })
 
@@ -272,42 +204,37 @@ router.post("/delete", function(req, res){
 })
 
 router.post("/apply-membership", function(req, res){
-    var username;
+    var user = {
+        username: req.session.username
+    }
     
-    var orgName, description, positions;
+    
+    User.get(user).then(function(user){
+        req.session.username = user.username;
 
-    username = req.body.username;
-    
-    orgName = req.body.orgName;
-    description = req.body.description;
-    positions = req.body.openPositions;
-    
-    res.render("org-profile.hbs", {
-        username : req.session.username
-    })
-    
-    Org.findOne(
-        {orgName: orgName,
-         description: description
-        },
-        function(err, doc){
-            if(err){
-                res.send(err)
-            }
-            else if(!doc){
-                res.send("User does not exist. :(")
-
-            }
-            else{
-                console.log(doc)
-                res.render("org-app.hbs", {
-                    org: doc,
-                    username: req.session.username
-                })
-            }
-            
+        var org = {
+            orgName: req.body.orgName
         }
-    )
+        
+        console.log(org);
+        
+        RegMemberOrg.get(org).then(function(org){
+            req.body.orgName = org.orgName;
+            
+            console.log("ORG APPLY: " + org)
+            res.render("member-app", {
+                user: user,
+                org: org
+            })
+        }).catch(function(error){
+          //assert(error)
+    })
+
+    }, function(error){
+        res.send(error)
+    }).catch(function(error){
+          //assert(error)
+    })
     
     //full implementation of sending moderator request to be fulfilled in phase 3
 })
@@ -320,6 +247,58 @@ router.post("/check-membership", function(req, res){
     
     //full implementation of sending moderator request to be fulfilled in phase 3
 })
+
+router.post("/submit-application", function(req, res){
+    var user = {
+        username: req.session.username
+    }
+    
+    
+    User.get(user).then(function(user){
+        req.session.username = user.username;
+
+        var org = {
+            orgName: req.body.orgName
+        }
+        
+        console.log(org);
+        
+        RegMemberOrg.get(org).then(function(org){
+            req.body.orgName = org.orgName;
+            
+            /*RegMemberOrg.findOneAndUpdate(
+                {
+                    orgName: req.body.orgName
+                },
+                {
+                    $push: {"membersSchema.pendingMembersId": user.body.userId
+                    },
+                    {
+                        new: true
+                    },
+                    function(err, result){
+                        console.log("Added " + user.body.userId + " to " + org)
+                    }
+                })*/
+            console.log("ORG APPLY: " + org)
+            res.render("member-app", {
+                user: user,
+                org: org
+            })
+        }).catch(function(error){
+          //assert(error)
+    })
+
+    }, function(error){
+        res.send(error)
+    }).catch(function(error){
+          //assert(error)
+    })
+    
+    res.render("org-profile", {
+        username : req.session.username
+    })
+}
 
 /*router.post("/submit-application", function(req, res){
     var username,
