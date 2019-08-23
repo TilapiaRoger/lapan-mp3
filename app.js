@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const mongodb = require("mongodb")
 
 var MongoClient = mongodb.MongoClient;
-var mongoUrl = process.env.MONGRODB_URI || "mongodb://localhost:27017/lapanmp3"
+var mongoUrl = process.env.MONGRODB_URI || "mongodb+srv://leeEmerson:%23%231961ggfw@cluster0-fpimn.mongodb.net/admin?replicaSet=Cluster0-shard-0&connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-1&3t.uriVersion=3&3t.connection.name=Cluster0-shard-0&3t.databases=admin,test/lapanmp3"
 
 const app = express();
 const http = require("http");
@@ -28,7 +28,7 @@ MongoClient.connect(mongoUrl,{
     }
 })
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost:27017/lapanmp3", {
+mongoose.connect(mongoUrl, {
     useNewUrlParser: true
 });
 
