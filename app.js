@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const mongodb = require("mongodb")
 
 var MongoClient = mongodb.MongoClient;
-var mongoUrl = process.env.MONGODB_URI || "mongodb+srv://leeEmerson:%23%231961ggfw@cluster0-fpimn.mongodb.net/admin?replicaSet=Cluster0-shard-0/lapanmp3"
+var mongoUrl = process.env.MONGODB_URI
 
 const app = express();
 const http = require("http");
