@@ -3,9 +3,18 @@ const crypto = require("crypto")
 
 var sch = mongoose.Schema;
 
+const RegMemberOrg = require("../models/student-org.js");
+
+
+var memberInfoSchema = mongoose.Schema({
+    orgId: sch.Types.ObjectId,
+    memberDepartment: String,
+    memberAnswers: [String]
+})
+
 var orgMembershipStatusSchema = mongoose.Schema({
-    currentOrgsId: [sch.Types.ObjectId],
-    pendingOrgsId: [sch.Types.ObjectId]
+    currentOrgsInfo: [memberInfoSchema],
+    pendingOrgsInfo: [memberInfoSchema]
 })
 
 var userSchema = mongoose.Schema({
@@ -90,6 +99,28 @@ module.exports.edit = function(user){
       })
     }).catch(function(error){
         console.log("Failed log in")
+          //assert(error)
+      })
+}
+
+module.exports.sendMembershipRequest = function(org, user){
+    return new global.Promise(function(resolve, reject){
+      User.updateOne(
+            {
+                username : user.username
+            },
+            {
+                $push: {
+                    "orgLists.pendingOrgsId": org._id
+                }
+            }
+        ).then(function(user){
+          resolve(user)
+      }, function(err){
+          reject(err)
+      })
+    }).catch(function(error){
+        console.log("Failed to show org details")
           //assert(error)
       })
 }

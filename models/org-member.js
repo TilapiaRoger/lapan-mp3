@@ -1,61 +1,52 @@
 const mongoose = require("mongoose")
 
-var ObjectId = mongoose.Types.ObjectId;
+var sch = mongoose.Schema;
 
 var interviewSchema = mongoose.Schema({
-    interviewDay: String,
-    interviewTime: String,
+    interviewDate: Date,
     interviewComplete: Boolean
 })
 
-var interviewSched = mongoose.model("interviews", interviewSchema)
-
 var orgMemberSchema = mongoose.Schema({
-    userIdNo: String,
-    orgId: ObjectId,
-    curPosition: String
+    userIdNo: sch.Types.ObjectId,
+    orgId: sch.Types.ObjectId,
+    curDepartment: String,
+    questionAnswers: [String],
+    interview: interviewSchema
 })
 
 var orgOfficerSchema = mongoose.Schema({
-    userIdNo: String,
-    orgId: ObjectId,
+    userIdNo: sch.Types.ObjectId,
+    orgId: sch.Types.ObjectId,
+    curDepartment: String,
+    questionAnswers: [String],
     curPosition: String,
     isMod: Boolean
 })
 
 //extend databases
-function extendSchema(Schema, definition, options){
-    return new mongoose.Schema(
-        Object.assign({}, Schema.obj, definition),
-        options
-    );
-}
 
 //extended results
-var regOrgMemberSchema = extendSchema(orgMemberSchema, {
-})
-var RegOrgMember = mongoose.model("regOrgMembers", regOrgMemberSchema)
+var RegOrgMember = mongoose.model("regOrgMembers", orgMemberSchema)
 
-var pendOrgMemberSchema = extendSchema(orgMemberSchema, {
-    interview: {type: interviewSchema, required: true}
-})
-var PendOrgMember = mongoose.model("pendOrgMembers", pendOrgMemberSchema)
+var PendOrgMember = mongoose.model("pendOrgMembers", orgMemberSchema)
 
 
-var regOrgOfficerSchema = extendSchema(orgOfficerSchema, {
-})
-var RegOrgOfficer = mongoose.model("regOrgOfficers", regOrgOfficerSchema)
+var RegOrgOfficer = mongoose.model("regOrgOfficers", orgOfficerSchema)
 
-var pendOrgOfficerSchema = extendSchema(orgOfficerSchema, {
-    interview: {type: interviewSchema, required: true}
-})
-var PendOrgOfficer = mongoose.model("pendOrgOfficers", pendOrgOfficerSchema)
+var PendOrgOfficer = mongoose.model("pendOrgOfficers", orgOfficerSchema)
 
-
-module.exports = {
-    RegOrgMember,
-    PendOrgMember,
-    RegOrgOfficer,
-    PendOrgOfficer,
-    interviewSched
+module.exports.getMemberRequest = function(member){
+    return new global.Promise(function(resolve, reject){
+        var pm = new PendOrgMember(member);
+        
+        pm.save().then(function(reqMember){
+            console.log(reqMember)
+            resolve(reqMember)
+        }, function(err){
+            reject(err)
+        })
+    }).catch(function(error){
+        console.log(error)
+      })
 }

@@ -61,7 +61,6 @@ router.get(["/", "/home"], function(req, res){
                     curUser: user,
                     orgs: orgs
                 })
-                console.log(orgs)
             })
             
         }, function(error){

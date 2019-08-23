@@ -84,9 +84,10 @@
         </div>
         
         <form id="search" action="search" method="post"> 
-                <input type="text" id="search-textbox">
-                <input type="submit" value="Search" id="search-button">
-            </form>
+            Search Org <input type="text" id="search-textbox">
+            <input type="submit" value="Search" id="search-button">
+        </form>
+        
         <div class="org-list">
             {{#each orgs}}
                 <div data-id="{{_id}}" id="org-box" href="org-profile">

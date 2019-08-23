@@ -101,7 +101,9 @@
             </div>
         </div>
         
-        <form id="apply-membership" action="org/apply-membership" method="post">
+        <form id="apply-membership" action="../org/apply-membership" method="post">
+            <input type="hidden"
+            value="{{org.orgName}}" id="org-name" name="orgName">
             <input type="hidden"
             value="{{user.username}}" id="username" name="username">
             <input type="submit" value="Apply for Membership" action="apply-membership" method="post">

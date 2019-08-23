@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const mongodb = require("mongodb")
 
 var MongoClient = mongodb.MongoClient;
-var mongoUrl = "mongodb://localhost:27017/lapanmp3"
+var mongoUrl = process.env.MONGRODB_URI || "mongodb://localhost:27017/lapanmp3"
 
 const app = express();
 const http = require("http");

@@ -14,12 +14,10 @@ const User = require("../models/user.js");
 const RegMemberOrg = require("../models/student-org.js");
 const {ExclusiveMemberOrg} = require("../models/student-org.js");
 
-const {RegOrgMember} = require("../models/org-member.js");
-const {PendOrgMember} = require("../models/org-member.js");
-const {RegOrgOfficer} = require("../models/org-member.js");
-const {PendOrgOfficer} = require("../models/org-member.js");
-const {interviewSched} = require("../models/org-member.js");
-
+const RegOrgMember = require("../models/org-member.js");
+const PendOrgMember = require("../models/org-member.js");
+const RegOrgOfficer = require("../models/org-member.js");
+const PendOrgOfficer = require("../models/org-member.js");
 const app = express();
 
 
@@ -76,6 +74,67 @@ router.get("/org-list", function(req, res){
     })
 })
 
+router.get("/new-org", function(req, res){
+    let user = {
+        username: req.session.username
+    }
+    
+    User.get(user).then(function(user){
+        res.render("new-org", {
+            user: user
+        });
+
+    }, function(error){
+        res.send(error)
+    }).catch(function(error){
+          //assert(error)
+    })
+})
+           
+router.post("/create-org", function(req, res){
+    var user = {
+        username: req.session.username
+    }
+    
+    let org = {
+        orgName: req.body.orgName,
+        room: req.body.room,
+        logoPath: req.body.icon,
+        description: req.body.description
+    }
+    
+    let msg = "Org created!"
+    
+    RegMemberOrg.create(org).then(function(org){
+        User.get(user).then(function(user){
+            
+            req.session.username = user.username;
+            res.render("new-org", {
+                msg: msg,
+                user: user
+            });
+
+        }, function(error){
+            res.send(error)
+        }).catch(function(error){
+              //assert(error)
+        })
+        
+        RegMemberOrg.getAll().then(function(orgs){
+            console.log(orgs)
+            res.render("home", {
+                user: user,
+                orgs: orgs
+            });
+        })
+        
+        },
+        function(error){
+            res.send(error + " Registration failed.")
+        }).catch(function(error){
+          //assert(error)
+      })
+})
 
 router.get("/my-org-list", function(req, res){
     let user = {
@@ -109,12 +168,6 @@ router.get("/my-org-members", function(req, res){
     
 })
 
-/*router.post("/result-request", function(req, res){
-    res.render("members-list.hbs",{
-        username : req.session.username
-    })
-    
-})*/
 
 router.post("/org-profile", function(req, res){
     var user = {
@@ -194,7 +247,6 @@ router.get("/requests", function(req, res){
         username : req.session.username
     })
     
-    //full implementation of sending moderator request to be fulfilled in phase 3
 })
 
 router.post("/delete", function(req, res){
@@ -236,7 +288,6 @@ router.post("/apply-membership", function(req, res){
           //assert(error)
     })
     
-    //full implementation of sending moderator request to be fulfilled in phase 3
 })
 
 router.post("/check-membership", function(req, res){
@@ -244,50 +295,56 @@ router.post("/check-membership", function(req, res){
     res.render("members-list.hbs", {
         username : req.session.username
     })
-    
-    //full implementation of sending moderator request to be fulfilled in phase 3
 })
 
 router.post("/submit-application", function(req, res){
     var user = {
-        username: req.session.username
+        username: req.body.username
     }
     
-    
     User.get(user).then(function(user){
-        req.session.username = user.username;
+        req.body.username = user.username;
 
         var org = {
             orgName: req.body.orgName
         }
         
-        console.log(org);
+        console.log("USER APPLY: " + user._id)
+        console.log("ORG APPLY: " + org)
         
-        RegMemberOrg.get(org).then(function(org){
+        RegMemberOrg.addPendingMember(org, user).then(function(org, user){
             req.body.orgName = org.orgName;
             
-            /*RegMemberOrg.findOneAndUpdate(
-                {
-                    orgName: req.body.orgName
-                },
-                {
-                    $push: {"membersSchema.pendingMembersId": user.body.userId
-                    },
-                    {
-                        new: true
-                    },
-                    function(err, result){
-                        console.log("Added " + user.body.userId + " to " + org)
-                    }
-                })*/
+            console.log("USER APPLY: " + user._id)
             console.log("ORG APPLY: " + org)
-            res.render("org-profile", {
-                user: user,
-                org: org
+            
+            let member = {
+                userIdNo: user._id,
+                orgId: org._id,
+                curDepartment: req.body.dept,
+                questionAnswers: [req.body.answer],
+                interview: null
+            }
+            
+            console.log("ORG APPLY: " + member)
+            PendOrgMember.getMemberRequest(member).then(function(member){
+                user._id = member.userIdNo;
+                    console.log("Member Stats: " + member)
+
+                    res.render("org-profile", {
+                        user: user,
+                        org: org
+                    })
+                },
+                function(error){
+                    res.send(error + " Application failed.")
+                }).catch(function(error){
+                  //assert(error)
             })
+            
         }).catch(function(error){
           //assert(error)
-    })
+        })
 
     }, function(error){
         res.send(error)
@@ -296,42 +353,5 @@ router.post("/submit-application", function(req, res){
     })
 })
 
-/*router.post("/submit-application", function(req, res){
-    var username,
-    idNo,
-    orgName,
-    orgId,
-    curPosition,
-    isAccepted;
-    
-    idNo = req.body.username;
-    username = req.body.username;
-    password = req.body.password;
-    isAccepted = false;
-    
-    User.findOne(
-        {username: username
-        },
-        function(err, doc){
-            if(err){
-                res.send(err)
-            }
-            else if(!doc){
-                res.send("User does not exist. :(")
-
-            }
-            else{
-                console.log(doc)
-                res.render("org-profile.hbs", {
-                    username: username
-                })
-            }
-            
-        }
-    )
-    
-    //adding pending members would be implemented in phase 3
-    
-})*/
 
 module.exports = router

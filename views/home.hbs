@@ -14,19 +14,17 @@
                     let username = $("#username").attr("value")
 
                     if(username == "webAdmin"){
-                        $("#profile-access").hide();
                         $("#home-user").hide();
-                        $("#org-box").hide();
-                        $("#org-table").show()
                         $("#home-admin").show();
-                        $(".user-icon").show();
+                        $("#profile-check").hide();
+                        $("#requests-check").hide();
                     }
                     else{
-                        $("#org-table").hide();
-                        $("#org-box").show();
                         $("#home-user").show();
                         $("#home-admin").hide();
-                        $(".user-icon").show();
+                        $("#profile-check").show();
+                        $("#requests-check").show();
+                        
                     }
                 }
             )
@@ -51,13 +49,13 @@
             
             <div id="home-admin">
                 <div id="home-user">
-                    <a href="home">Home</a>
+                    <a href="../home">Home</a>
                     <div id="student-org-menu">
                         <button id="student-org-menu-buttton"> Student Clubs
                         </button>
                         <div id="student-org-options">
                             <a href="../org/org-list">All Student Clubs</a>
-                            <a href="../org/my-org-list">Add New Student Clubs</a>
+                            <a href="../org/new-org">Add New Student Club</a>
                         </div>
                     </div>
                     <a href="#">About</a>
@@ -69,9 +67,8 @@
                     <img src="/photos/icons8-male-user-50.png">{{curUser.username}}
                 </button>
                 <div id="user-options">
-                    <a href="" onclick="
-                    $('#profile-hidden').submit(); return false;">Profile</a>
-                    <a href="../org/requests">Club Requests</a>
+                    <a id="profile-check" href="" onclick="$('#profile-hidden').submit(); return false;">Profile</a>
+                    <a id="requests-check" href="../org/requests">Club Requests</a>
                     <a href="../user/logout">Log Out</a>
                 </div>
 
@@ -103,6 +100,11 @@
                     </li>
                 </ul>
             </div>
+            
+            <form id="search" action="search" method="post"> 
+                Search Org <input type="text" id="search-textbox">
+                <input type="submit" value="Search" id="search-button">
+            </form>
             
             <div class="org-list">
                 {{#each orgs}}

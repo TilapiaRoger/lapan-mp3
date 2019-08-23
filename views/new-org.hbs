@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <script src="jquery-3.4.1.js"></script>
+        
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        
+        <link rel="stylesheet" type="text/css" href="/css/main-pages.css">
+        
+        <script>
+        </script>
+        
+    </head>
+
+    <body>
+        <div class="user-form" id="create-org" action="create-org" method="post" enctype="multipart/form-data">
+            <div class="general-form" >
+                <form id="create-org-form" action="create-org" method="post">
+                    <p>{{msg}}</p>
+                    <h1>General Info</h1>
+                    Organization Name <input type="text" value="Org Name" id="orgName" name="orgName"><br>
+                    Room <input type="text" value="Room" id="room" name="room"><br>
+                    Logo <input type="file" id="icon" name="icon"><br>
+                    Description <input type="text" id="description" name="description"><br>
+                    
+                    <input type="hidden" name="username" value="{{user.username}}"> 
+                    <input type="submit" id="confirm-org" value="Create Org"><br>
+                </form>
+                <a href="javascript:history.back()" id="next-page">Cancel Org Creation</a>
+            </div>
+        </div>
+    </body>
+</html>
